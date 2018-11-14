@@ -8,11 +8,6 @@
 #ifndef SRC_OUTPUT_DRIVEOUTPUTTASK_H_
 #define SRC_OUTPUT_DRIVEOUTPUTTASK_H_
 
-#include <Controls/ControlsData.h>
-#include <Output/DriveOutputData.h>
-#include <SensorInput/SensorInputData.h>
-#include <UserInput/UserInputData.h>
-
 #include <ThreadBases/ThreadTaskBase.h>
 #include <Utilities/TigerSwerve/TigerSwerve.h>
 #include <RobotMap.h>
@@ -24,16 +19,10 @@ namespace frc
 class DriveOutputTask : public ThreadTaskBase
 {
 public:
-    DriveOutputTask(ControlsData* ControlData, DriveOutputData* DriveData,
-                    SensorInputData* SensorData, UserInputData* UserData);
+    DriveOutputTask(ThreadDataContainer* threadData);
     virtual ~DriveOutputTask();
 
 private:
-    ControlsData* _controlsData;
-    DriveOutputData* _driveData;
-    SensorInputData* _sensorData;
-    UserInputData* _userData;
-
     void ThreadTask() override;
     void ConfigureRotationMotors();
     void ConfigureDriveMotors();

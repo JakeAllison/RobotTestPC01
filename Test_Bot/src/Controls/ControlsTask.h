@@ -24,15 +24,10 @@ namespace frc
 class ControlsTask : public ThreadTaskBase
 {
 public:
-    ControlsTask(ControlsData* ControlData, DriveOutputData* DriveData, SensorInputData* SensorData,
-                 UserInputData* UserData);
+    ControlsTask(ThreadDataContainer* threadData);
     virtual ~ControlsTask();
 
 private:
-    ControlsData* _controlsData;
-    DriveOutputData* _driveData;
-    SensorInputData* _sensorData;
-    UserInputData* _userData;
     void ThreadTask() override;
 
     PID_Calc _GyroPID;

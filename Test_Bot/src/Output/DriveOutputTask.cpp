@@ -13,12 +13,8 @@ using namespace Global_Constants::Swerve_Drive;
 namespace frc
 {
 
-DriveOutputTask::DriveOutputTask(ControlsData* ControlData, DriveOutputData* DriveData,
-                                 SensorInputData* SensorData, UserInputData* UserData)
-        : _controlsData(ControlData)
-        , _driveData(DriveData)
-        , _sensorData(SensorData)
-        , _userData(UserData)
+DriveOutputTask::DriveOutputTask(ThreadDataContainer* threadData)
+: ThreadTaskBase(threadData)
         , _driveSystem(_talons)
 {
 
@@ -129,7 +125,7 @@ void DriveOutputTask::ThreadTask()
     double gyroAngle = SensorReadings::kGYRO_ANGLE_DEFAULT;
 
     // Get drive mode from user.
-    _userData->GetData(DriveModeOverride::kDRIVE_O, overrideDriveMode);
+    _threadData->_userInputData.GetData(DriveModeOverride::kDRIVE_O, overrideDriveMode);
 
     // Drive based on mode given.
     switch (overrideDriveMode)
@@ -140,23 +136,23 @@ void DriveOutputTask::ThreadTask()
 
     case DriveModeOverride::kMODE_NORMAL:
         // Get X, Y, and R outputs from the PID control system.
-        _controlsData->GetData(ControlOutputs::kDRIVE_OUT_X, driveX);
-        _controlsData->GetData(ControlOutputs::kDRIVE_OUT_Y, driveY);
-        _controlsData->GetData(ControlOutputs::kDRIVE_OUT_R, driveR);
+    	_threadData->_controlsData.GetData(ControlOutputs::kDRIVE_OUT_X, driveX);
+    	_threadData->_controlsData.GetData(ControlOutputs::kDRIVE_OUT_Y, driveY);
+    	_threadData->_controlsData.GetData(ControlOutputs::kDRIVE_OUT_R, driveR);
         break;
 
     case DriveModeOverride::kMODE_FIELD_ORIENTED:
         // Get X, Y, and R outputs from the PID control system.
-        _controlsData->GetData(ControlOutputs::kDRIVE_OUT_X, driveX);
-        _controlsData->GetData(ControlOutputs::kDRIVE_OUT_Y, driveY);
-        _controlsData->GetData(ControlOutputs::kDRIVE_OUT_R, driveR);
-        _sensorData->GetData(SensorReadings::kGYRO_ANGLE, gyroAngle);
+    	_threadData->_controlsData.GetData(ControlOutputs::kDRIVE_OUT_X, driveX);
+    	_threadData->_controlsData.GetData(ControlOutputs::kDRIVE_OUT_Y, driveY);
+    	_threadData->_controlsData.GetData(ControlOutputs::kDRIVE_OUT_R, driveR);
+    	_threadData->_controlsData.GetData(SensorReadings::kGYRO_ANGLE, gyroAngle);
         break;
 
     case DriveModeOverride::kMODE_LOCKUP:
         // DriveX and DriveY are zero.
         // Wheels will naturally turn to lockup position upon turning the robot.
-        _controlsData->GetData(ControlOutputs::kDRIVE_OUT_R, driveR);
+    	_threadData->_controlsData.GetData(ControlOutputs::kDRIVE_OUT_R, driveR);
         break;
 
     default:

@@ -11,18 +11,14 @@
 namespace frc
 {
 
-SensorInputTask::SensorInputTask(ControlsData* ControlData, DriveOutputData* DriveData,
-                                 SensorInputData* SensorData, UserInputData* UserData)
-        : _controlsData(ControlData)
-        , _driveData(DriveData)
-        , _sensorData(SensorData)
-        , _userData(UserData)
+SensorInputTask::SensorInputTask(ThreadDataContainer* threadData)
+: ThreadTaskBase(threadData)
         , _imu(frc::SPI::Port::kMXP)
 {
     using namespace Global_Constants::ThreadData::SensorData;
 
-    _sensorData->AddKey<double>(SensorReadings::kGYRO_ANGLE);
-    _sensorData->AddKey<double>(SensorReadings::kGYRO_RATE);
+    _threadData->_sensorInputData.AddKey<double>(SensorReadings::kGYRO_ANGLE);
+    _threadData->_sensorInputData.AddKey<double>(SensorReadings::kGYRO_RATE);
 
     _imu.ZeroYaw();
 }
@@ -34,13 +30,13 @@ SensorInputTask::~SensorInputTask()
 
 void SensorInputTask::ServiceRequests()
 {
-    std::unique_lock<std::mutex> lck(_sensorData->mtxNotifier);
+    std::unique_lock<std::mutex> lck(_threadData->_sensorInputData.mtxNotifier);
     //----------------------------------------------------------
-    _sensorData->serviceGuard.lock();
+    _threadData->_sensorInputData.serviceGuard.lock();
 
-    bool temp1 = _sensorData->_resetYawRequest;
+    bool temp1 = _threadData->_sensorInputData._resetYawRequest;
 
-    _sensorData->serviceGuard.unlock();
+    _threadData->_sensorInputData.serviceGuard.unlock();
     //----------------------------------------------------------
 
     // Service the "Yaw Reset" request.
@@ -50,27 +46,27 @@ void SensorInputTask::ServiceRequests()
     }
 
     //----------------------------------------------------------
-    _sensorData->serviceGuard.lock();
+    _threadData->_sensorInputData.serviceGuard.lock();
 
     // We do this to avoid resetting the flag in case a request was made
     // since servicing was started.
     if (temp1)
     {
-        _sensorData->_resetYawRequest = false;
+        _threadData->_sensorInputData._resetYawRequest = false;
     }
 
-    _sensorData->serviceGuard.unlock();
+    _threadData->_sensorInputData.serviceGuard.unlock();
     //----------------------------------------------------------
 
-    _sensorData->conditionWait.notify_all();
+    _threadData->_sensorInputData.conditionWait.notify_all();
 }
 
 void SensorInputTask::ThreadTask()
 {
     ServiceRequests();
     using namespace Global_Constants::ThreadData::SensorData;
-    _sensorData->SetData(SensorReadings::kGYRO_ANGLE, double(_imu.GetYaw()));
-    _sensorData->SetData(SensorReadings::kGYRO_RATE, _imu.GetRate());
+    _threadData->_sensorInputData.SetData(SensorReadings::kGYRO_ANGLE, double(_imu.GetYaw()));
+    _threadData->_sensorInputData.SetData(SensorReadings::kGYRO_RATE, _imu.GetRate());
 }
 
 } /* namespace frc */

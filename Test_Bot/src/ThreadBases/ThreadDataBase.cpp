@@ -12,16 +12,13 @@
 #include <SmartDashboard/SmartDashboard.h>
 #endif
 
-namespace frc
-{
+namespace frc {
 
-ThreadDataBase::ThreadDataBase()
-{
+ThreadDataBase::ThreadDataBase() {
     // TODO Auto-generated constructor stub
 }
 
-ThreadDataBase::~ThreadDataBase()
-{
+ThreadDataBase::~ThreadDataBase() {
     // TODO Auto-generated destructor stub
 }
 
@@ -34,8 +31,7 @@ ThreadDataBase::~ThreadDataBase()
  * @return success Returns success as true or false.
  */
 template<>
-bool ThreadDataBase::AddKey<int>(std::string NewKey, int initData)
-{
+bool ThreadDataBase::AddKey<int>(std::string NewKey, int initData) {
     bool success = _intData.AddKey(NewKey, initData);
     return success;
 }
@@ -49,8 +45,7 @@ bool ThreadDataBase::AddKey<int>(std::string NewKey, int initData)
  * @return success Returns success as true or false.
  */
 template<>
-bool ThreadDataBase::AddKey<double>(std::string NewKey, double initData)
-{
+bool ThreadDataBase::AddKey<double>(std::string NewKey, double initData) {
     bool success = _doubleData.AddKey(NewKey, initData);
     return success;
 }
@@ -65,8 +60,7 @@ bool ThreadDataBase::AddKey<double>(std::string NewKey, double initData)
  */
 template<>
 bool ThreadDataBase::AddSafeKey<int>(
-    std::string NewKey, int initData, int Min, int Max, unsigned int TimeoutUS)
-{
+    std::string NewKey, int initData, int Min, int Max, unsigned int TimeoutUS) {
     bool success = _intDataSafe.AddKey(NewKey, initData, Min, Max, TimeoutUS);
     return success;
 }
@@ -81,8 +75,7 @@ bool ThreadDataBase::AddSafeKey<int>(
  */
 template<>
 bool ThreadDataBase::AddSafeKey<double>(
-    std::string NewKey, double initData, double Min, double Max, unsigned int TimeoutUS)
-{
+    std::string NewKey, double initData, double Min, double Max, unsigned int TimeoutUS) {
     bool success = _doubleDataSafe.AddKey(NewKey, initData, Min, Max, TimeoutUS);
     return success;
 }
@@ -95,8 +88,7 @@ bool ThreadDataBase::AddSafeKey<double>(
  * @return success Returns success as true or false.
  */
 template<>
-bool ThreadDataBase::RemoveKey<int>(std::string RemovedKey)
-{
+bool ThreadDataBase::RemoveKey<int>(std::string RemovedKey) {
     bool success = _intData.RemoveKey(RemovedKey);
     return success;
 }
@@ -109,8 +101,7 @@ bool ThreadDataBase::RemoveKey<int>(std::string RemovedKey)
  * @return success Returns success as true or false.
  */
 template<>
-bool ThreadDataBase::RemoveKey<double>(std::string RemovedKey)
-{
+bool ThreadDataBase::RemoveKey<double>(std::string RemovedKey) {
     bool success = _doubleData.RemoveKey(RemovedKey);
     return success;
 }
@@ -123,8 +114,7 @@ bool ThreadDataBase::RemoveKey<double>(std::string RemovedKey)
  * @return success Returns success as true or false.
  */
 template<>
-bool ThreadDataBase::RemoveSafeKey<int>(std::string RemovedKey)
-{
+bool ThreadDataBase::RemoveSafeKey<int>(std::string RemovedKey) {
     bool success = _intDataSafe.RemoveKey(RemovedKey);
     return success;
 }
@@ -137,8 +127,7 @@ bool ThreadDataBase::RemoveSafeKey<int>(std::string RemovedKey)
  * @return success Returns success as true or false.
  */
 template<>
-bool ThreadDataBase::RemoveSafeKey<double>(std::string RemovedKey)
-{
+bool ThreadDataBase::RemoveSafeKey<double>(std::string RemovedKey) {
     bool success = _doubleDataSafe.RemoveKey(RemovedKey);
     return success;
 }
@@ -153,8 +142,7 @@ bool ThreadDataBase::RemoveSafeKey<double>(std::string RemovedKey)
  * @return success Returns success as true or false.
  */
 template<>
-bool ThreadDataBase::GetData<int>(std::string DataKey, int& OutputData, std::string ContextMessage)
-{
+bool ThreadDataBase::GetData<int>(std::string DataKey, int& OutputData, std::string ContextMessage) {
     bool success = _intData.GetData(DataKey, OutputData, ContextMessage);
     return success;
 }
@@ -169,8 +157,7 @@ bool ThreadDataBase::GetData<int>(std::string DataKey, int& OutputData, std::str
  * @return success Returns success as true or false.
  */
 template<>
-bool ThreadDataBase::GetData<double>(std::string DataKey, double& OutputData, std::string ContextMessage)
-{
+bool ThreadDataBase::GetData<double>(std::string DataKey, double& OutputData, std::string ContextMessage) {
     bool success = _doubleData.GetData(DataKey, OutputData, ContextMessage);
     return success;
 }
@@ -185,8 +172,7 @@ bool ThreadDataBase::GetData<double>(std::string DataKey, double& OutputData, st
  * @return success Returns success as true or false.
  */
 template<>
-bool ThreadDataBase::GetSafeData<int>(std::string DataKey, int& OutputData, std::string ContextMessage, bool forceIfTest, bool forceIfDegraded, bool forceIfInvalid)
-{
+bool ThreadDataBase::GetSafeData<int>(std::string DataKey, int& OutputData, std::string ContextMessage, bool forceIfTest, bool forceIfDegraded, bool forceIfInvalid) {
     bool success = _intDataSafe.GetData(DataKey, OutputData, ContextMessage, forceIfTest, forceIfDegraded, forceIfInvalid);
     return success;
 }
@@ -201,8 +187,7 @@ bool ThreadDataBase::GetSafeData<int>(std::string DataKey, int& OutputData, std:
  * @return success Returns success as true or false.
  */
 template<>
-bool ThreadDataBase::GetSafeData<double>(std::string DataKey, double& OutputData, std::string ContextMessage, bool forceIfTest, bool forceIfDegraded, bool forceIfInvalid)
-{
+bool ThreadDataBase::GetSafeData<double>(std::string DataKey, double& OutputData, std::string ContextMessage, bool forceIfTest, bool forceIfDegraded, bool forceIfInvalid) {
     bool success = _doubleDataSafe.GetData(DataKey, OutputData, ContextMessage, forceIfTest, forceIfDegraded, forceIfInvalid);
     return success;
 }
@@ -217,8 +202,7 @@ bool ThreadDataBase::GetSafeData<double>(std::string DataKey, double& OutputData
  * @return success Returns success as true or false.
  */
 template<>
-bool ThreadDataBase::SetData<int>(std::string DataKey, int InputData, std::string ContextMessage)
-{
+bool ThreadDataBase::SetData<int>(std::string DataKey, int InputData, std::string ContextMessage) {
     bool success = _intData.SetData(DataKey, InputData, ContextMessage);
     return success;
 }
@@ -233,8 +217,7 @@ bool ThreadDataBase::SetData<int>(std::string DataKey, int InputData, std::strin
  * @return success Returns success as true or false.
  */
 template<>
-bool ThreadDataBase::SetData<double>(std::string DataKey, double InputData, std::string ContextMessage)
-{
+bool ThreadDataBase::SetData<double>(std::string DataKey, double InputData, std::string ContextMessage) {
     bool success = _doubleData.SetData(DataKey, InputData, ContextMessage);
     return success;
 }
@@ -249,8 +232,7 @@ bool ThreadDataBase::SetData<double>(std::string DataKey, double InputData, std:
  * @return success Returns success as true or false.
  */
 template<>
-bool ThreadDataBase::SetSafeData<int>(std::string DataKey, int InputData, std::string ContextMessage, bool isTest, bool forceIfDegraded)
-{
+bool ThreadDataBase::SetSafeData<int>(std::string DataKey, int InputData, std::string ContextMessage, bool isTest, bool forceIfDegraded) {
     bool success = _intDataSafe.SetData(DataKey, InputData, ContextMessage, isTest, forceIfDegraded);
     return success;
 }
@@ -265,14 +247,12 @@ bool ThreadDataBase::SetSafeData<int>(std::string DataKey, int InputData, std::s
  * @return success Returns success as true or false.
  */
 template<>
-bool ThreadDataBase::SetSafeData<double>(std::string DataKey, double InputData, std::string ContextMessage, bool isTest, bool forceIfDegraded)
-{
+bool ThreadDataBase::SetSafeData<double>(std::string DataKey, double InputData, std::string ContextMessage, bool isTest, bool forceIfDegraded) {
     bool success = _doubleDataSafe.SetData(DataKey, InputData, ContextMessage, isTest, forceIfDegraded);
     return success;
 }
 
-void ThreadDataBase::PrintData()
-{
+void ThreadDataBase::PrintData() {
     _intData.PrintData();
     _doubleData.PrintData();
     _intDataSafe.PrintData();
@@ -280,33 +260,11 @@ void ThreadDataBase::PrintData()
 }
 
 #ifdef FOR_ROBOT
-void ThreadDataBase::SendToSmartDashboard()
-{
+void ThreadDataBase::SendToSmartDashboard() {
     _intData.PrintData();
     _doubleData.PrintData();
     _intDataSafe.PrintData();
     _doubleDataSafe.PrintData();
 }
 #endif
-/*
- void ThreadTaskBase::MakeAServiceRequest(bool Blocking, unsigned int MaxBlockTimeUS) {
- std::unique_lock<std::mutex> lck(mtxNotifier);
- 
- //----------------------------------------------------------
- serviceGuard.lock();
- 
- //-------- Set your request variable below here ------------
- 
- serviceGuard.unlock();
- //----------------------------------------------------------
- 
- if (Blocking) {
- if (MaxBlockTimeUS > 0) {
- conditionWait.wait_for(lck, std::chrono::microseconds(MaxBlockTimeUS));
- } else {
- conditionWait.wait(lck);
- }
- }
- }
- */
 } /* namespace frc */

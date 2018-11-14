@@ -12,28 +12,23 @@
 #include <mutex>
 #include <condition_variable>
 #include <Defines.h>
+#include <ThreadBases/ThreadDataContainer.h>
 
-namespace frc
-{
+namespace frc {
 
-class ThreadTaskBase
-{
+class ThreadTaskBase {
 public:
-    ThreadTaskBase();
+    ThreadTaskBase(ThreadDataContainer* threadData);
     virtual ~ThreadTaskBase();
     bool Start(const int periodUS);
     void Stop(bool joinThread);
     double GetPeriod();
-
+protected:
+    ThreadDataContainer* _threadData;
 private:
-    /*
-     * Instead of using direct pointers in the derived classes,
-     * an unordered map containing shared_ptr's to the other data
-     * structures might be used to access data from other threads.
-     */
     bool _stopThread = false;
     bool _taskOverloaded = false;
-    double _periodUS = 0.01;
+    long int _periodUS = 10000;
     std::thread _workerThread;
     std::mutex _workerThreadGuard;
 

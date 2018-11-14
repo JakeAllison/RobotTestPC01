@@ -12,12 +12,8 @@
 namespace frc
 {
 
-ControlsTask::ControlsTask(ControlsData* ControlData, DriveOutputData* DriveData,
-                           SensorInputData* SensorData, UserInputData* UserData)
-        : _controlsData(ControlData)
-        , _driveData(DriveData)
-        , _sensorData(SensorData)
-        , _userData(UserData)
+ControlsTask::ControlsTask(ThreadDataContainer* threadData)
+		: ThreadTaskBase(threadData)
         , _driveModeXPrev(Global_Constants::ThreadData::UserControl::DriveModes::kMODE_DEFAULT)
         , _driveModeYPrev(Global_Constants::ThreadData::UserControl::DriveModes::kMODE_DEFAULT)
         , _driveModeRPrev(Global_Constants::ThreadData::UserControl::DriveModes::kMODE_DEFAULT)
@@ -27,10 +23,10 @@ ControlsTask::ControlsTask(ControlsData* ControlData, DriveOutputData* DriveData
 
     // Add all keys for controls data output.
 
-    _controlsData->AddKey<double>(ControlOutputs::kDRIVE_OUT_X);
-    _controlsData->AddKey<double>(ControlOutputs::kDRIVE_OUT_Y);
-    _controlsData->AddKey<double>(ControlOutputs::kDRIVE_OUT_R);
-    _controlsData->AddKey<double>(ControlOutputs::kDRIVE_OUT_R_DONE);
+    _threadData->_controlsData.AddKey<double>(ControlOutputs::kDRIVE_OUT_X);
+    _threadData->_controlsData.AddKey<double>(ControlOutputs::kDRIVE_OUT_Y);
+    _threadData->_controlsData.AddKey<double>(ControlOutputs::kDRIVE_OUT_R);
+    _threadData->_controlsData.AddKey<double>(ControlOutputs::kDRIVE_OUT_R_DONE);
 
     // Set up PID controls.
 
@@ -66,9 +62,9 @@ void ControlsTask::ThreadTask()
     //     data contains allowable values.
     //-------------------------------------------------------
 
-    _userData->GetData(DriveModes::kDRIVE_X, driveModeX);
-    _userData->GetData(DriveModes::kDRIVE_Y, driveModeY);
-    _userData->GetData(DriveModes::kDRIVE_R, driveModeR);
+    _threadData->_userInputData.GetData(DriveModes::kDRIVE_X, driveModeX);
+    _threadData->_userInputData.GetData(DriveModes::kDRIVE_Y, driveModeY);
+    _threadData->_userInputData.GetData(DriveModes::kDRIVE_R, driveModeR);
 
     //-------------------------------------------------------
     // Select which inputs to use as the drive system inputs.
@@ -79,7 +75,7 @@ void ControlsTask::ThreadTask()
     switch (driveModeX)
     {
     case DriveModes::kMODE_OPEN_LOOP:
-        _userData->GetData(OutputDemand::kX_DEMAND_OL, driveX);
+    	_threadData->_userInputData.GetData(OutputDemand::kX_DEMAND_OL, driveX);
         break;
 
     default:
@@ -90,7 +86,7 @@ void ControlsTask::ThreadTask()
     switch (driveModeY)
     {
     case DriveModes::kMODE_OPEN_LOOP:
-        _userData->GetData(OutputDemand::kY_DEMAND_OL, driveY);
+    	_threadData->_userInputData.GetData(OutputDemand::kY_DEMAND_OL, driveY);
         break;
 
     default:
@@ -101,12 +97,12 @@ void ControlsTask::ThreadTask()
     switch (driveModeR)
     {
     case DriveModes::kMODE_OPEN_LOOP:
-        _userData->GetData(OutputDemand::kR_DEMAND_OL, driveR);
+    	_threadData->_userInputData.GetData(OutputDemand::kR_DEMAND_OL, driveR);
         break;
 
     case DriveModes::kMODE_GYRO:
-        if (_userData->GetData(OutputDemand::kR_DEMAND_CL, driveRCLDemand)
-                && _sensorData->GetData(SensorReadings::kGYRO_ANGLE, gyroAngle))
+        if (_threadData->_userInputData.GetData(OutputDemand::kR_DEMAND_CL, driveRCLDemand)
+                && _threadData->_sensorInputData.GetData(SensorReadings::kGYRO_ANGLE, gyroAngle))
         {
             driveRCLDemand *= 180;
             driveR = _GyroPID.Calc_PID(gyroAngle, driveRCLDemand, GetPeriod());
@@ -131,10 +127,11 @@ void ControlsTask::ThreadTask()
     // Set the output data for X, Y, and R.
     //-------------------------------------------------------
 
-    _controlsData->SetData(ControlOutputs::kDRIVE_OUT_X, driveX);
-    _controlsData->SetData(ControlOutputs::kDRIVE_OUT_Y, driveY);
-    _controlsData->SetData(ControlOutputs::kDRIVE_OUT_R, driveR);
-    _controlsData->SetData(ControlOutputs::kDRIVE_OUT_R_DONE, driveDoneR);
+    _threadData->_controlsData.SetData(ControlOutputs::kDRIVE_OUT_X, driveX);
+    _threadData->_controlsData.SetData(ControlOutputs::kDRIVE_OUT_Y, driveY);
+    _threadData->_controlsData.SetData(ControlOutputs::kDRIVE_OUT_R, driveR);
+    _threadData->_controlsData.SetData(ControlOutputs::kDRIVE_OUT_R_DONE, driveDoneR);
+
 }
 
 } /* namespace frc */

@@ -11,33 +11,27 @@
 namespace frc
 {
 
-UserInputTask::UserInputTask(ControlsData* ControlData, DriveOutputData* DriveData,
-                             SensorInputData* SensorData, UserInputData* UserData)
-        : _controlsData(ControlData)
-        , _driveData(DriveData)
-        , _sensorData(SensorData)
-        , _userData(UserData)
-        , _driverJoystick(
-            Global_Constants::ThreadData::UserControl::ControllerPorts::kDRIVER_CONTROLLER_PORT)
-        , _operatorJoystick(
-            Global_Constants::ThreadData::UserControl::ControllerPorts::kOPERATOR_CONTROLLER_PORT)
+UserInputTask::UserInputTask(ThreadDataContainer* threadData)
+: ThreadTaskBase(threadData)
+        , _driverJoystick(Global_Constants::ThreadData::UserControl::ControllerPorts::kDRIVER_CONTROLLER_PORT)
+        , _operatorJoystick(Global_Constants::ThreadData::UserControl::ControllerPorts::kOPERATOR_CONTROLLER_PORT)
 {
 
     // Create keys for data output.
 
     using namespace Global_Constants::ThreadData::UserControl;
 
-    _userData->AddKey<int>(DriveModeOverride::kDRIVE_O);
-    _userData->AddKey<int>(DriveModes::kDRIVE_X);
-    _userData->AddKey<int>(DriveModes::kDRIVE_Y);
-    _userData->AddKey<int>(DriveModes::kDRIVE_R);
+    _threadData->_userInputData.AddKey<int>(DriveModeOverride::kDRIVE_O);
+    _threadData->_userInputData.AddKey<int>(DriveModes::kDRIVE_X);
+    _threadData->_userInputData.AddKey<int>(DriveModes::kDRIVE_Y);
+    _threadData->_userInputData.AddKey<int>(DriveModes::kDRIVE_R);
 
-    _userData->AddKey<double>(OutputDemand::kX_DEMAND_OL);
-    _userData->AddKey<double>(OutputDemand::kY_DEMAND_OL);
-    _userData->AddKey<double>(OutputDemand::kR_DEMAND_OL);
-    _userData->AddKey<double>(OutputDemand::kX_DEMAND_CL);
-    _userData->AddKey<double>(OutputDemand::kY_DEMAND_CL);
-    _userData->AddKey<double>(OutputDemand::kR_DEMAND_CL);
+    _threadData->_userInputData.AddKey<double>(OutputDemand::kX_DEMAND_OL);
+    _threadData->_userInputData.AddKey<double>(OutputDemand::kY_DEMAND_OL);
+    _threadData->_userInputData.AddKey<double>(OutputDemand::kR_DEMAND_OL);
+    _threadData->_userInputData.AddKey<double>(OutputDemand::kX_DEMAND_CL);
+    _threadData->_userInputData.AddKey<double>(OutputDemand::kY_DEMAND_CL);
+    _threadData->_userInputData.AddKey<double>(OutputDemand::kR_DEMAND_CL);
 }
 
 UserInputTask::~UserInputTask()
@@ -60,19 +54,19 @@ void UserInputTask::ThreadTask()
 
     if (_driverJoystick.bButton.get()->Get())
     {
-        _userData->SetData(DriveModeOverride::kDRIVE_O, DriveModeOverride::kMODE_FIELD_ORIENTED);
+        _threadData->_userInputData.SetData(DriveModeOverride::kDRIVE_O, DriveModeOverride::kMODE_FIELD_ORIENTED);
     }
     else if (_operatorJoystick.bButton.get()->Get())
     {
-        _userData->SetData(DriveModeOverride::kDRIVE_O, DriveModeOverride::kMODE_FIELD_ORIENTED);
+        _threadData->_userInputData.SetData(DriveModeOverride::kDRIVE_O, DriveModeOverride::kMODE_FIELD_ORIENTED);
     }
     else if (_driverJoystick.aButton.get()->Get())
     {
-        _userData->SetData(DriveModeOverride::kDRIVE_O, DriveModeOverride::kMODE_NORMAL);
+        _threadData->_userInputData.SetData(DriveModeOverride::kDRIVE_O, DriveModeOverride::kMODE_NORMAL);
     }
     else if (_operatorJoystick.aButton.get()->Get())
     {
-        _userData->SetData(DriveModeOverride::kDRIVE_O, DriveModeOverride::kMODE_NORMAL);
+        _threadData->_userInputData.SetData(DriveModeOverride::kDRIVE_O, DriveModeOverride::kMODE_NORMAL);
     }
 
     // Choose source of X and Y demand.
@@ -80,13 +74,13 @@ void UserInputTask::ThreadTask()
 
     if (_operatorJoystick.leftStickButton.get()->Get())
     {
-        _userData->SetData(OutputDemand::kX_DEMAND_OL, _operatorJoystick.GetLeftXAxis());
-        _userData->SetData(OutputDemand::kY_DEMAND_OL, _operatorJoystick.GetLeftYAxis());
+        _threadData->_userInputData.SetData(OutputDemand::kX_DEMAND_OL, _operatorJoystick.GetLeftXAxis());
+        _threadData->_userInputData.SetData(OutputDemand::kY_DEMAND_OL, _operatorJoystick.GetLeftYAxis());
     }
     else
     {
-        _userData->SetData(OutputDemand::kX_DEMAND_OL, _driverJoystick.GetLeftXAxis());
-        _userData->SetData(OutputDemand::kY_DEMAND_OL, _driverJoystick.GetLeftXAxis());
+        _threadData->_userInputData.SetData(OutputDemand::kX_DEMAND_OL, _driverJoystick.GetLeftXAxis());
+        _threadData->_userInputData.SetData(OutputDemand::kY_DEMAND_OL, _driverJoystick.GetLeftXAxis());
     }
 
     // Choose source of R demand.
@@ -94,13 +88,13 @@ void UserInputTask::ThreadTask()
 
     if (_operatorJoystick.rightStickButton.get()->Get())
     {
-        _userData->SetData(OutputDemand::kR_DEMAND_OL, _operatorJoystick.GetRightXAxis());
-        _userData->SetData(OutputDemand::kR_DEMAND_CL, _operatorJoystick.GetRightXAxis() * 180.0);
+        _threadData->_userInputData.SetData(OutputDemand::kR_DEMAND_OL, _operatorJoystick.GetRightXAxis());
+        _threadData->_userInputData.SetData(OutputDemand::kR_DEMAND_CL, _operatorJoystick.GetRightXAxis() * 180.0);
     }
     else
     {
-        _userData->SetData(OutputDemand::kR_DEMAND_OL, _driverJoystick.GetRightXAxis());
-        _userData->SetData(OutputDemand::kR_DEMAND_CL, _operatorJoystick.GetRightXAxis() * 180.0);
+        _threadData->_userInputData.SetData(OutputDemand::kR_DEMAND_OL, _driverJoystick.GetRightXAxis());
+        _threadData->_userInputData.SetData(OutputDemand::kR_DEMAND_CL, _operatorJoystick.GetRightXAxis() * 180.0);
     }
 
     // Choose what sensor to use to turn the robot.
@@ -109,26 +103,26 @@ void UserInputTask::ThreadTask()
     // heading.
     if (_driverJoystick.leftShoulderButton.get()->Get())
     {
-        _userData->SetData(DriveModes::kDRIVE_R, DriveModes::kMODE_GYRO);
+        _threadData->_userInputData.SetData(DriveModes::kDRIVE_R, DriveModes::kMODE_GYRO);
     }
     else if (_operatorJoystick.leftShoulderButton.get()->Get())
     {
-        _userData->SetData(DriveModes::kDRIVE_R, DriveModes::kMODE_GYRO);
+        _threadData->_userInputData.SetData(DriveModes::kDRIVE_R, DriveModes::kMODE_GYRO);
     }
     else
     {
-        _userData->SetData(DriveModes::kDRIVE_R, DriveModes::kMODE_OPEN_LOOP);
+        _threadData->_userInputData.SetData(DriveModes::kDRIVE_R, DriveModes::kMODE_OPEN_LOOP);
     }
 
     // Call a service request to reset IMU yaw when "Y" is pressed.
     // The current parameters are non-blocking.
     if (_driverJoystick.yButton.get()->Get())
     {
-        _sensorData->ResetYaw(false, 0);
+        _threadData->_sensorInputData.ResetYaw(false, 0);
     }
     else if (_operatorJoystick.yButton.get()->Get())
     {
-        _sensorData->ResetYaw(false, 0);
+        _threadData->_sensorInputData.ResetYaw(false, 0);
     }
 }
 

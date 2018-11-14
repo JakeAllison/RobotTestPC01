@@ -13,11 +13,9 @@
 #include <string>
 #include <Defines.h>
 
-namespace frc
-{
+namespace frc {
 template <typename T>
-class MultithreadDataArray
-{
+class MultithreadDataArray {
 public:
     MultithreadDataArray();
     virtual ~MultithreadDataArray();
@@ -38,5 +36,7 @@ private:
 };
 
 } /* namespace frc */
+
+#include <Utilities/ThreadSafeData/MultithreadDataArray.cpp>
 
 #endif /* SRC_UTILITIES_THREADSAFEDATA_MULTITHREADDATAARRAY_H_ */

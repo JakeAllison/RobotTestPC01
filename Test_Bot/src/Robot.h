@@ -33,15 +33,11 @@ public:
     void TeleopPeriodic() override;
 
 private:
-    ControlsData RobotControlsData;
-    DriveOutputData RobotDriveData;
-    SensorInputData RobotSensorData;
-    UserInputData RobotUserData;
-
-    ControlsTask RobotControlsTask;
-    DriveOutputTask RobotDriveTask;
-    SensorInputTask RobotSensorTask;
-    UserInputTask RobotUserTask;
+    ThreadDataContainer _threadDataContainer;
+    ControlsTask _controlsTask;
+    DriveOutputTask _driveOutputTask;
+    SensorInputTask _sensorInputTask;
+    UserInputTask _userInputTask;
 
     frc::SendableChooser<std::string> m_chooser;
     const std::string kAutoNameDefault = "Default";

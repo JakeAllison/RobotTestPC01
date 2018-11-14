@@ -8,20 +8,17 @@
 #include <Robot.h>
 
 Robot::Robot()
-        : RobotControlsData()
-        , RobotDriveData()
-        , RobotSensorData()
-        , RobotUserData()
-        , RobotControlsTask(&RobotControlsData, &RobotDriveData, &RobotSensorData, &RobotUserData)
-        , RobotDriveTask(&RobotControlsData, &RobotDriveData, &RobotSensorData, &RobotUserData)
-        , RobotSensorTask(&RobotControlsData, &RobotDriveData, &RobotSensorData, &RobotUserData)
-        , RobotUserTask(&RobotControlsData, &RobotDriveData, &RobotSensorData, &RobotUserData)
+        : _threadDataContainer()
+        , _controlsTask(&_threadDataContainer)
+        , _driveOutputTask(&_threadDataContainer)
+        , _sensorInputTask(&_threadDataContainer)
+        , _userInputTask(&_threadDataContainer)
 {
-
-    RobotSensorTask.Start(50000);
-    RobotUserTask.Start(50000);
-    RobotControlsTask.Start(50000);
-    RobotDriveTask.Start(50000);
+	// 200 hz rate
+    _sensorInputTask.Start(50000);
+    _userInputTask.Start(50000);
+    _controlsTask.Start(50000);
+    _driveOutputTask.Start(50000);
 }
 
 void Robot::RobotInit()
@@ -73,10 +70,10 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic()
 {
-    RobotControlsData.SendToSmartDashboard();
-    RobotDriveData.SendToSmartDashboard();
-    RobotSensorData.SendToSmartDashboard();
-    RobotUserData.SendToSmartDashboard();
+    _threadDataContainer._controlsData.PrintData();
+    _threadDataContainer._driveOutputData.PrintData();
+    _threadDataContainer._sensorInputData.PrintData();
+    _threadDataContainer._userInputData.PrintData();
 }
 
 START_ROBOT_CLASS(Robot)

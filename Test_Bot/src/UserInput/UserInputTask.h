@@ -24,15 +24,10 @@ namespace frc
 class UserInputTask : public ThreadTaskBase
 {
 public:
-    UserInputTask(ControlsData* ControlData, DriveOutputData* DriveData,
-                  SensorInputData* SensorData, UserInputData* UserData);
+    UserInputTask(ThreadDataContainer* threadData);
     virtual ~UserInputTask();
 
 private:
-    ControlsData* _controlsData;
-    DriveOutputData* _driveData;
-    SensorInputData* _sensorData;
-    UserInputData* _userData;
     void ThreadTask() override;
 
     // Declare private variables and inputs.

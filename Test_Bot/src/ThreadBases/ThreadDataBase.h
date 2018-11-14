@@ -8,28 +8,27 @@
 #ifndef SRC_THREADDATABASE_H_
 #define SRC_THREADDATABASE_H_
 
+
+#include <Utilities/ThreadSafeData/MultithreadDataArray.h>
+#include <Utilities/ThreadSafeData/SafeMultithreadDataArray.h>
 #include <unordered_map>
 #include <mutex>
 #include <string>
 #include <condition_variable>
 #include <Defines.h>
-#include <Utilities/ThreadSafeData/MultithreadDataArray.h>
-#include <Utilities/ThreadSafeData/SafeMultithreadDataArray.h>
 
-namespace frc
-{
-class ThreadDataBase
-{
+namespace frc {
+class ThreadDataBase {
 public:
     ThreadDataBase();
     virtual ~ThreadDataBase();
     template<typename T>
     bool GetData(std::string DataKey, T& OutputData, std::string ContextMessage = "");
     template<typename T>
-    bool GetSafeData(std::string DataKey, T& OutputData, std::string ContextMessage = "", bool forceIfTest = false, bool forceIfDegraded = false,
-                     bool forceIfInvalid = false);
+    bool GetSafeData(std::string DataKey, T& OutputData, std::string ContextMessage = "", bool forceIfTest = true, bool forceIfDegraded = true, bool forceIfInvalid = true);
 
     void PrintData();
+
 #ifdef FOR_ROBOT
 
     void SendToSmartDashboard();
