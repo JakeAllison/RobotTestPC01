@@ -33,7 +33,7 @@ private:
      */
     bool _stopThread = false;
     bool _taskOverloaded = false;
-    double _periodSec = 0.01;
+    double _periodUS = 0.01;
     std::thread _workerThread;
     std::mutex _workerThreadGuard;
 

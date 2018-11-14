@@ -40,7 +40,7 @@ bool SafeMultithreadDataArray<T>::AddKey(std::string NewKey, T InitData, T range
 {
     bool success = true;
     _dataGuard.lock();
-    bool insertSuccess = _storedData.emplace(std::pair<std::string, SafeData<T>>(NewKey, SafeData<T>(InitData, rangeMin, rangeMax, timeoutUS))).second;
+    bool insertSuccess = _storedData.emplace(std::pair<std::string, CheckedData<T>>(NewKey, CheckedData<T>(InitData, rangeMin, rangeMax, timeoutUS))).second;
     //bool insertSuccess = _storedData.emplace(std::piecewise_construct, std::forward_as_tuple(NewKey), std::forward_as_tuple(InitData, rangeMin, rangeMax, timeoutUS)).second;
     if (!insertSuccess)
     {
@@ -212,7 +212,7 @@ template bool SafeMultithreadDataArray<double>
 template <typename T>
 void SafeMultithreadDataArray<T>::PrintData()
 {
-    for (std::pair<std::string, SafeData<T>> element : _storedData)
+    for (std::pair<std::string, CheckedData<T>> element : _storedData)
     {
         T temp;
         DataValidity validity = element.second.GetData(temp, true, true, true);
@@ -228,7 +228,7 @@ template void SafeMultithreadDataArray<double>
 
 template <typename T>void SafeMultithreadDataArray<T>::SendToSmartDashboard()
 {
-    for (std::pair<std::string, SafeData<T>> element : _storedData)
+    for (std::pair<std::string, CheckedData<T>> element : _storedData)
     {
         T temp;
         DataValidity validity = element.second.GetData(temp, true, true, true);

@@ -86,7 +86,7 @@ void ThreadTaskBase::Stop(bool joinThread)
  */
 double ThreadTaskBase::GetPeriod()
 {
-    return _periodSec;
+    return _periodUS;
 }
 
 /**
@@ -95,7 +95,7 @@ double ThreadTaskBase::GetPeriod()
  */
 void ThreadTaskBase::ThreadMain(const int periodUS)
 {
-    _periodSec = periodUS * 0.000001;
+    _periodUS = periodUS * 0.000001;
     _stopThread = false;
     _workerThreadGuard.lock();
     while (!_stopThread)

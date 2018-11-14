@@ -10,7 +10,7 @@
 namespace frc
 {
 template <typename T>
-SafeData<T>::SafeData()
+CheckedData<T>::CheckedData()
         : _zeroCompare(std::chrono::microseconds(0))
         , _updateDeadline(std::chrono::steady_clock::now())
         , _timeoutUS(std::chrono::microseconds(0))
@@ -21,13 +21,13 @@ SafeData<T>::SafeData()
 {
     // Nothing to do.
 }
-template SafeData<int>
-::SafeData();
-template SafeData<double>
-::SafeData();
+template CheckedData<int>
+::CheckedData();
+template CheckedData<double>
+::CheckedData();
 
 template <typename T>
-SafeData<T>::SafeData(T initData, T rangeMin, T rangeMax, unsigned int timeoutUS)
+CheckedData<T>::CheckedData(T initData, T rangeMin, T rangeMax, unsigned int timeoutUS)
         : _zeroCompare(std::chrono::microseconds(0))
         , _updateDeadline(std::chrono::steady_clock::now())
         , _timeoutUS(std::chrono::microseconds(timeoutUS))
@@ -38,23 +38,23 @@ SafeData<T>::SafeData(T initData, T rangeMin, T rangeMax, unsigned int timeoutUS
 {
     // Nothing here
 }
-template SafeData<int>
+template CheckedData<int>
 ::SafeData(int initData, int rangeMin, int rangeMax, unsigned int timeoutUS);
-template SafeData<double>
+template CheckedData<double>
 ::SafeData(double initData, double rangeMin, double rangeMax, unsigned int timeoutUS);
 
 template <typename T>
-SafeData<T>::~SafeData()
+CheckedData<T>::~CheckedData()
 {
     // Nothing here
 }
-template SafeData<int>
-::~SafeData();
-template SafeData<double>
-::~SafeData();
+template CheckedData<int>
+::~CheckedData();
+template CheckedData<double>
+::~CheckedData();
 
 template <typename T>
-bool SafeData<T>::SetRange(T rangeMin, T rangeMax)
+bool CheckedData<T>::SetRange(T rangeMin, T rangeMax)
 {
     bool success = true;
 
@@ -69,24 +69,24 @@ bool SafeData<T>::SetRange(T rangeMin, T rangeMax)
     }
     return success;
 }
-template bool SafeData<int>
+template bool CheckedData<int>
 ::SetRange(int rangeMin, int rangeMax);
-template bool SafeData<double>
+template bool CheckedData<double>
 ::SetRange(double rangeMin, double rangeMax);
 
 template <typename T>
-bool SafeData<T>::SetTimeoutUS(unsigned int timeoutUS)
+bool CheckedData<T>::SetTimeoutUS(unsigned int timeoutUS)
 {
     _timeoutUS = std::chrono::microseconds(timeoutUS);
     return true;
 }
-template bool SafeData<int>
+template bool CheckedData<int>
 ::SetTimeoutUS(unsigned int timeoutUS);
-template bool SafeData<double>
+template bool CheckedData<double>
 ::SetTimeoutUS(unsigned int timeoutUS);
 
 template <typename T>
-DataValidity SafeData<T>::SetData(T inputData, bool isTest, bool forceIfDegraded)
+DataValidity CheckedData<T>::SetData(T inputData, bool isTest, bool forceIfDegraded)
 {
     DataValidity tempValid = DataValidity::DATA_VALIDITY_INVALID;
 
@@ -120,13 +120,13 @@ DataValidity SafeData<T>::SetData(T inputData, bool isTest, bool forceIfDegraded
     return tempValid;
 }
 
-template DataValidity SafeData<int>
+template DataValidity CheckedData<int>
 ::SetData(int inputData, bool isTest, bool forceIfDegraded);
-template DataValidity SafeData<double>
+template DataValidity CheckedData<double>
 ::SetData(double inputData, bool isTest, bool forceIfDegraded);
 
 template <typename T>
-DataValidity SafeData<T>::GetData(
+DataValidity CheckedData<T>::GetData(
     T& outputData, bool forceIfTest, bool forceIfDegraded, bool forceIfInvalid)
 {
     if (_validity != DataValidity::DATA_VALIDITY_TEST && _timeoutUS > _zeroCompare)
@@ -168,9 +168,9 @@ DataValidity SafeData<T>::GetData(
 
     return _validity;
 }
-template DataValidity SafeData<int>
+template DataValidity CheckedData<int>
 ::GetData(int& outputData, bool forceIfTest, bool forceIfDegraded, bool forceIfInvalid);
-template DataValidity SafeData<double>
+template DataValidity CheckedData<double>
 ::GetData(double& outputData, bool forceIfTest, bool forceIfDegraded, bool forceIfInvalid);
 
 } /* namespace frc */

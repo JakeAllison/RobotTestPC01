@@ -37,7 +37,7 @@ public:
 
 private:
     std::mutex _dataGuard;
-    std::unordered_map<std::string, SafeData<T>> _storedData;
+    std::unordered_map<std::string, CheckedData<T>> _storedData;
 };
 
 } /* namespace frc */

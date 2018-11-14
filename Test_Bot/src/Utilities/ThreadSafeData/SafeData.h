@@ -21,12 +21,12 @@ enum DataValidity {
 };
 
 template <typename T>
-class SafeData
+class CheckedData
 {
 public:
-    SafeData();
-    SafeData(T initData = 0, T rangeMin = 0, T rangeMax = 0, unsigned int timeoutUS = 0);
-    virtual ~SafeData();
+    CheckedData();
+    CheckedData(T initData = 0, T rangeMin = 0, T rangeMax = 0, unsigned int timeoutUS = 0);
+    virtual ~CheckedData();
     bool SetRange(T rangeMin, T rangeMax);
     bool SetTimeoutUS(unsigned int timeoutUS);
     DataValidity SetData(T inputData, bool isTest = false, bool forceIfDegraded = false);
